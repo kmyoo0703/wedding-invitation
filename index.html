@@ -289,13 +289,31 @@
       visibility: hidden;
     }
 
+    .modal-overlay::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      opacity: 0;
+      transition: opacity 1.3s ease-in-out;
+      pointer-events: none;
+    }
+
     .modal-overlay.active {
       visibility: visible;
+    }
+
+    .modal-overlay.active::before {
+      opacity: 1;
     }
 
     .modal-overlay.closing {
       visibility: visible;
       pointer-events: none;
+    }
+
+    .modal-overlay.closing::before {
+      opacity: 0;
     }
 
     .modal-content {
@@ -598,21 +616,31 @@
     window.addEventListener('touchstart', systemTouchFirst);
 
     const page2 = document.getElementById('page2');
+    let page2HasUserScrolled = false;
+
+    function handlePage2Scroll() {
+      const requiredScroll = Math.min(80, window.innerHeight * 0.08);
+      if (window.scrollY >= requiredScroll) {
+        page2HasUserScrolled = true;
+      }
+      startPage2WhenVisible();
+    }
 
     function startPage2WhenVisible() {
-      if (!assetsReady || !page2 || page2.classList.contains('play')) return;
+      if (!assetsReady || !page2HasUserScrolled || !page2 || page2.classList.contains('play')) return;
 
       const rect = page2.getBoundingClientRect();
       const triggerLine = window.innerHeight * 0.82;
 
       if (rect.top <= triggerLine && rect.bottom > 0) {
+        void page2.offsetWidth;
         page2.classList.add('play');
-        window.removeEventListener('scroll', startPage2WhenVisible);
+        window.removeEventListener('scroll', handlePage2Scroll);
         window.removeEventListener('resize', startPage2WhenVisible);
       }
     }
 
-    window.addEventListener('scroll', startPage2WhenVisible, { passive: true });
+    window.addEventListener('scroll', handlePage2Scroll, { passive: true });
     window.addEventListener('resize', startPage2WhenVisible);
     window.addEventListener('load', startPage2WhenVisible);
     document.addEventListener('DOMContentLoaded', startPage2WhenVisible);
