@@ -146,20 +146,6 @@
       }
     }
 
-    @keyframes iconPressMotion {
-      0% {
-        transform: translateZ(0) scale(1);
-      }
-
-      45% {
-        transform: translateZ(0) scale(0.82);
-      }
-
-      100% {
-        transform: translateZ(0) scale(1);
-      }
-    }
-
     .icon-motion-wrapper {
       position: absolute;
       z-index: 102;
@@ -173,6 +159,13 @@
       overflow: hidden;
       contain: paint;
       -webkit-tap-highlight-color: transparent;
+      transition: transform 140ms ease-out;
+      -webkit-transition: -webkit-transform 140ms ease-out;
+    }
+
+    .icon-motion-wrapper.is-pressed {
+      transform: translateZ(0) scale(0.82);
+      -webkit-transform: translateZ(0) scale(0.82);
     }
 
     .icon2-1-overlay,
@@ -225,11 +218,6 @@
       height: 1462.86%;
       left: -468.79%;
       top: -925%;
-    }
-
-    .icon-motion-wrapper.is-pressed {
-      animation: iconPressMotion 360ms ease-in-out 1;
-      -webkit-animation: iconPressMotion 360ms ease-in-out 1;
     }
 
     /* 1페이지 */
@@ -394,6 +382,7 @@
       box-shadow: none;
       appearance: none;
       -webkit-appearance: none;
+      touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -416,8 +405,7 @@
     /* 3페이지 */
     .modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100vw;
       height: 100dvh;
       z-index: 9999;
@@ -425,35 +413,20 @@
       justify-content: center;
       align-items: center;
       padding: 0;
-      background: transparent;
       visibility: hidden;
-    }
-
-    .modal-overlay::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.55);
-      opacity: 0;
-      transition: opacity 1.3s ease-in-out;
-      pointer-events: none;
+      background-color: rgba(0, 0, 0, 0);
+      transition: background-color 1.3s ease-in-out;
     }
 
     .modal-overlay.active {
       visibility: visible;
-    }
-
-    .modal-overlay.active::before {
-      opacity: 1;
+      background-color: rgba(0, 0, 0, 0.62);
     }
 
     .modal-overlay.closing {
       visibility: visible;
       pointer-events: none;
-    }
-
-    .modal-overlay.closing::before {
-      opacity: 0;
+      background-color: rgba(0, 0, 0, 0);
     }
 
     .modal-content {
@@ -822,26 +795,12 @@
         playAudio();
       }
 
-      window.removeEventListener(
-        "click",
-        systemTouchFirst
-      );
-
-      window.removeEventListener(
-        "touchstart",
-        systemTouchFirst
-      );
+      window.removeEventListener("click", systemTouchFirst);
+      window.removeEventListener("touchstart", systemTouchFirst);
     }
 
-    window.addEventListener(
-      "click",
-      systemTouchFirst
-    );
-
-    window.addEventListener(
-      "touchstart",
-      systemTouchFirst
-    );
+    window.addEventListener("click", systemTouchFirst);
+    window.addEventListener("touchstart", systemTouchFirst);
 
     const page2 = document.getElementById("page2");
     let page2HasUserScrolled = false;
@@ -968,17 +927,15 @@
         return;
       }
 
-      iconElement.classList.remove("is-pressed");
-      void iconElement.offsetWidth;
       iconElement.classList.add("is-pressed");
+    }
 
-      iconElement.addEventListener(
-        "animationend",
-        () => {
-          iconElement.classList.remove("is-pressed");
-        },
-        { once: true }
-      );
+    function releaseIconPress(iconElement) {
+      if (!iconElement) {
+        return;
+      }
+
+      iconElement.classList.remove("is-pressed");
     }
 
     function runAfterPress(button, action) {
@@ -994,7 +951,7 @@
       window.setTimeout(() => {
         button.dataset.actionPending = "false";
         action();
-      }, 360);
+      }, 160);
     }
 
     const openDate2Map =
@@ -1116,29 +1073,21 @@
         return;
       }
 
-      let lastTouchTime = 0;
+      area.addEventListener("pointerdown", () => {
+        playIconPress(icon);
+      });
 
-      area.addEventListener(
-        "touchstart",
-        () => {
-          lastTouchTime = Date.now();
-          playIconPress(icon);
-        },
-        { passive: true }
-      );
+      area.addEventListener("pointerup", () => {
+        releaseIconPress(icon);
+      });
 
-      area.addEventListener(
-        "mousedown",
-        () => {
-          if (
-            Date.now() - lastTouchTime < 700
-          ) {
-            return;
-          }
+      area.addEventListener("pointercancel", () => {
+        releaseIconPress(icon);
+      });
 
-          playIconPress(icon);
-        }
-      );
+      area.addEventListener("pointerleave", () => {
+        releaseIconPress(icon);
+      });
     });
   </script>
 </body>
