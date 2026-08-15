@@ -26,6 +26,24 @@
       align-items: center;
     }
 
+    /* 모바일에서 이미지가 반쯤 그려진 상태로 노출되지 않도록 준비 화면 유지 */
+    .initial-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 20000;
+      background: #ffffff;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity 0.45s ease-in-out, visibility 0s linear 0.45s;
+    }
+
+    body.site-ready .initial-loader {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
     .card-container {
       position: relative;
       width: min(100%, 842px);
@@ -154,13 +172,21 @@
     }
 
     /* ================= 1페이지 ================= */
-    .page1 .background   { z-index: 1; animation: fadeIn 1.3s ease-in-out 0s both; }
-    .page1 .rabbit-layer { z-index: 2; animation: fadeIn 1.3s ease-in-out 1.3s both; }
-    .page1 .tree         { z-index: 3; transform-origin: 50% 82%; animation: growTree 1.3s ease-in-out 2.6s both; }
-    .page1 .bird         { z-index: 4; animation: flyAndStop 1.3s ease-in-out 3.9s both; }
-    .page1 .title        { z-index: 5; animation: fadeIn 1.3s ease-in-out 5.2s both; }
-    .page1 .date         { z-index: 6; animation: fadeIn 1.3s ease-in-out 6.5s both; }
-    .page1 .name         { z-index: 7; animation: fadeIn 1.3s ease-in-out 7.8s both; }
+    .page1 .background   { z-index: 1; }
+    .page1 .rabbit-layer { z-index: 2; }
+    .page1 .tree         { z-index: 3; transform-origin: 50% 82%; }
+    .page1 .bird         { z-index: 4; }
+    .page1 .title        { z-index: 5; }
+    .page1 .date         { z-index: 6; }
+    .page1 .name         { z-index: 7; }
+
+    body.site-ready .page1 .background   { animation: fadeIn 1.3s ease-in-out 0s both; }
+    body.site-ready .page1 .rabbit-layer { animation: fadeIn 1.3s ease-in-out 1.3s both; }
+    body.site-ready .page1 .tree         { animation: growTree 1.3s ease-in-out 2.6s both; }
+    body.site-ready .page1 .bird         { animation: flyAndStop 1.3s ease-in-out 3.9s both; }
+    body.site-ready .page1 .title        { animation: fadeIn 1.3s ease-in-out 5.2s both; }
+    body.site-ready .page1 .date         { animation: fadeIn 1.3s ease-in-out 6.5s both; }
+    body.site-ready .page1 .name         { animation: fadeIn 1.3s ease-in-out 7.8s both; }
 
     /* ================= 2페이지 ================= */
     .page2.play .background2 { z-index: 1; animation: fadeIn 1.3s ease-in-out 0s both; }
@@ -377,6 +403,8 @@
 </head>
 <body>
 
+  <div class="initial-loader" id="initialLoader" aria-hidden="true"></div>
+
   <audio id="bgm" src="bgm.mp3" loop preload="auto"></audio>
 
   <button class="bgm-btn" id="bgmBtn" aria-label="음악 키기/끄기">
@@ -448,6 +476,51 @@
   </div>
 
   <script>
+    let assetsReady = false;
+
+    function prepareAllImages() {
+      const images = Array.from(document.images);
+
+      const jobs = images.map((img) => {
+        if (img.complete) {
+          if (img.naturalWidth > 0 && typeof img.decode === 'function') {
+            return img.decode().catch(() => undefined);
+          }
+          return Promise.resolve();
+        }
+
+        return new Promise((resolve) => {
+          const finish = () => {
+            img.removeEventListener('load', finish);
+            img.removeEventListener('error', finish);
+
+            if (typeof img.decode === 'function' && img.naturalWidth > 0) {
+              img.decode().catch(() => undefined).finally(resolve);
+            } else {
+              resolve();
+            }
+          };
+
+          img.addEventListener('load', finish, { once: true });
+          img.addEventListener('error', finish, { once: true });
+        });
+      });
+
+      const maximumWait = new Promise((resolve) => window.setTimeout(resolve, 8000));
+
+      return Promise.race([Promise.all(jobs), maximumWait]);
+    }
+
+    function revealSite() {
+      if (assetsReady) return;
+      assetsReady = true;
+
+      window.requestAnimationFrame(() => {
+        document.body.classList.add('site-ready');
+        window.requestAnimationFrame(startPage2WhenVisible);
+      });
+    }
+
     function fitCardInner() {
       const imgRatio = 842 / 1191;
       const containers = document.querySelectorAll('.modal-content');
@@ -520,7 +593,7 @@
     const page2 = document.getElementById('page2');
 
     function startPage2WhenVisible() {
-      if (!page2 || page2.classList.contains('play')) return;
+      if (!assetsReady || !page2 || page2.classList.contains('play')) return;
 
       const rect = page2.getBoundingClientRect();
       const triggerLine = window.innerHeight * 0.82;
@@ -550,6 +623,8 @@
         startPage2WhenVisible();
       }
     });
+
+    prepareAllImages().then(revealSite).catch(revealSite);
 
     const icon2_1 = document.querySelector('.icon2-1-motion');
     const icon2_2 = document.querySelector('.icon2-2-motion');
