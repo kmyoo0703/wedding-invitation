@@ -202,7 +202,11 @@
     .page2.play .r9  { z-index: 2; animation: fadeIn 1.3s ease-in-out 4.1s both; }
     .page2.play .r10 { z-index: 2; animation: fadeIn 1.3s ease-in-out 4.45s both; }
     .page2.play .r11 { z-index: 2; animation: fadeIn 1.3s ease-in-out 4.8s both; }
-    .page2.play .r12 { z-index: 2; animation: fadeIn 1.3s ease-in-out 5.15s both; }
+    .page2.play .r12 {
+      z-index: 2;
+      filter: brightness(1.0039370079);
+      animation: fadeIn 1.3s ease-in-out 5.15s both;
+    }
 
     .page2.play .title2    { z-index: 3; animation: fadeIn 1.3s ease-in-out 6.45s both; }
     .page2.play .date2     { z-index: 4; animation: fadeIn 1.3s ease-in-out 7.75s both; }
@@ -278,33 +282,16 @@
       padding: 0;
       
       visibility: hidden;
-      transition: visibility 0s linear 1.3s;
-    }
-
-    .modal-overlay::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      opacity: 0;
-      transition: opacity 1.3s ease-in-out;
     }
 
     .modal-overlay.active {
       visibility: visible;
-      transition-delay: 0s;
-    }
-
-    .modal-overlay.active::before {
-      opacity: 1;
     }
 
     .modal-overlay.closing {
       visibility: visible;
       pointer-events: none;
     }
-
-    .modal-overlay.closing::before { opacity: 0; }
 
     .modal-content {
       position: relative;
