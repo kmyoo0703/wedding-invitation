@@ -109,32 +109,47 @@
 
     .icon-motion-wrapper {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      z-index: 102;
+      opacity: 0;
       pointer-events: none;
-      z-index: 101;
       will-change: transform;
+      -webkit-transform: translateZ(0) scale(1);
+      transform: translateZ(0) scale(1);
+      -webkit-tap-highlight-color: transparent;
     }
 
     .icon2-1-overlay,
     .icon2-2-overlay,
     .icon3-overlay {
       position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
       object-fit: fill;
       pointer-events: none;
       opacity: 0;
+      max-width: none;
     }
 
-    .icon2-1-motion { transform-origin: 68.8312% 48.2422%; }
-    .icon2-2-motion { transform-origin: 87.4573% 91.0156%; }
-    .icon3-motion   { transform-origin: 50% 66.6504%; }
+    .icon2-1-motion {
+      top: 44.8242%; left: 64.0465%; width: 9.5694%; height: 6.8359%;
+    }
+    .icon2-2-motion {
+      top: 88.3301%; left: 83.7321%; width: 7.4504%; height: 5.3711%;
+    }
+    .icon3-motion {
+      top: 63.2324%; left: 45.1811%; width: 9.6377%; height: 6.8359%;
+    }
+
+    .icon2-1-overlay {
+      width: 1045.00%; height: 1462.86%; left: -669.29%; top: -655.69%;
+    }
+    .icon2-2-overlay {
+      width: 1342.21%; height: 1861.82%; left: -1123.86%; top: -1644.58%;
+    }
+    .icon3-overlay {
+      width: 1037.59%; height: 1462.86%; left: -468.79%; top: -925.00%;
+    }
 
     .icon-motion-wrapper.is-pressed {
+      -webkit-animation: iconPressMotion 360ms cubic-bezier(0.22, 0.75, 0.28, 1) 1;
       animation: iconPressMotion 360ms cubic-bezier(0.22, 0.75, 0.28, 1) 1;
     }
 
@@ -161,7 +176,7 @@
     .page2.play .r9  { z-index: 2; animation: fadeIn 1.3s ease-in-out 4.1s both; }
     .page2.play .r10 { z-index: 2; animation: fadeIn 1.3s ease-in-out 4.45s both; }
     .page2.play .r11 { z-index: 2; animation: fadeIn 1.3s ease-in-out 4.8s both; }
-    .page2.play .r12 { z-index: 2; animation: fadeIn 1.3s ease-in-out 5.15s both; filter: brightness(1.2); }
+    .page2.play .r12 { z-index: 2; animation: fadeIn 1.3s ease-in-out 5.15s both; }
 
     .page2.play .title2    { z-index: 3; animation: fadeIn 1.3s ease-in-out 6.45s both; }
     .page2.play .date2     { z-index: 4; animation: fadeIn 1.3s ease-in-out 7.75s both; }
@@ -171,13 +186,10 @@
     /* icon2-1의 네모 테두리와 내부 전체를 포함한 터치 영역 */
     .date2-map-click-area {
       position: absolute;
-      top: 44.8242%;
-      left: 64.0465%;
-      width: 9.5694%;
-      height: 6.8359%;
-      z-index: 102;
-      opacity: 0;
-      pointer-events: none;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       -webkit-appearance: none;
@@ -195,7 +207,8 @@
       animation: fadeIn 1.3s ease-in-out 7.75s both;
     }
 
-    .page2.play .date2-map-click-area {
+    .page2.play .icon2-1-motion,
+    .page2.play .icon2-2-motion {
       opacity: 1;
       pointer-events: auto;
     }
@@ -203,13 +216,10 @@
     /* icon2-2의 네모 테두리와 내부 전체를 포함한 터치 영역 */
     .bus-click-area {
       position: absolute;
-      top: 88.3301%;
-      left: 83.7321%;
-      width: 7.4504%;
-      height: 5.3711%;
-      z-index: 102;
-      opacity: 0;
-      pointer-events: none;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       -webkit-appearance: none;
@@ -226,12 +236,6 @@
       opacity: 1;
       animation: fadeIn 1.3s ease-in-out 10.35s both;
     }
-
-    .page2.play .bus-click-area {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
 
     /* ================= 3페이지 팝업 모달 ================= */
     .modal-overlay {
@@ -304,13 +308,10 @@
     /* icon3의 네모 테두리와 내부 전체를 포함한 터치 영역 */
     .map-click-area {
       position: absolute;
-      top: 63.2324%;
-      left: 45.1811%;
-      width: 9.6377%;
-      height: 6.8359%;
-      z-index: 102;
-      opacity: 0;
-      pointer-events: none;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       -webkit-appearance: none;
@@ -328,7 +329,7 @@
       animation: fadeIn 1.3s ease-in-out 7.8s both;
     }
 
-    .modal-overlay.active .map-click-area {
+    .modal-overlay.active .icon3-motion {
       opacity: 1;
       pointer-events: auto;
     }
@@ -401,13 +402,16 @@
       <img src="background2.png" class="layer background2">
       <img src="title2.png" class="layer title2">
       <img src="date2.png" class="layer date2">
-      <div class="icon-motion-wrapper icon2-1-motion"><img src="icon2-1.png" class="icon2-1-overlay"></div>
-      <button class="date2-map-click-area" id="openDate2Map" type="button" aria-label="첫 번째 지도 열기"></button>
+      <div class="icon-motion-wrapper icon2-1-motion">
+        <img src="icon2-1.png" class="icon2-1-overlay">
+        <button class="date2-map-click-area" id="openDate2Map" type="button" aria-label="첫 번째 지도 열기"></button>
+      </div>
       <img src="greeting.png" class="layer greeting">
       <img src="bus2.png" class="layer bus-layer">
-      <div class="icon-motion-wrapper icon2-2-motion"><img src="icon2-2.png" class="icon2-2-overlay"></div>
-
-      <button class="bus-click-area" id="openModalIcon" type="button" aria-label="상세 지도 열기"></button>
+      <div class="icon-motion-wrapper icon2-2-motion">
+        <img src="icon2-2.png" class="icon2-2-overlay">
+        <button class="bus-click-area" id="openModalIcon" type="button" aria-label="상세 지도 열기"></button>
+      </div>
 
       <img src="rabbit1.png" class="layer rabbit r1">
       <img src="rabbit2.png" class="layer rabbit r2">
@@ -435,9 +439,10 @@
         <img src="rabbit3-2.png" class="layer rabbit3-2">
         <img src="title3.png" class="layer title3">
         <img src="date3.png" class="layer date3">
-        <div class="icon-motion-wrapper icon3-motion"><img src="icon3.png" class="icon3-overlay" alt=""></div>
-
-        <button class="map-click-area" id="openExternalMap" type="button" aria-label="외부 지도 열기"></button>
+        <div class="icon-motion-wrapper icon3-motion">
+          <img src="icon3.png" class="icon3-overlay" alt="">
+          <button class="map-click-area" id="openExternalMap" type="button" aria-label="외부 지도 열기"></button>
+        </div>
       </div>
     </div>
   </div>
@@ -472,11 +477,6 @@
     window.addEventListener('resize', fitCardInner);
     window.addEventListener('load', fitCardInner);
     document.addEventListener('DOMContentLoaded', fitCardInner);
-
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
-    }
-    window.scrollTo(0, 0);
 
     const bgm = document.getElementById('bgm');
     const bgmBtn = document.getElementById('bgmBtn');
@@ -523,7 +523,7 @@
       if (!page2 || page2.classList.contains('play')) return;
 
       const rect = page2.getBoundingClientRect();
-      const triggerLine = window.innerHeight * 0.25;
+      const triggerLine = window.innerHeight * 0.82;
 
       if (rect.top <= triggerLine && rect.bottom > 0) {
         page2.classList.add('play');
