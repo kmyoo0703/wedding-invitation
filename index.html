@@ -586,13 +586,20 @@
 
     const page2 = document.getElementById('page2');
     let page2HasUserScrolled = false;
+    let page2ScrollFrame = null;
 
     function handlePage2Scroll() {
       const requiredScroll = Math.min(80, window.innerHeight * 0.08);
       if (window.scrollY >= requiredScroll) {
         page2HasUserScrolled = true;
       }
-      startPage2WhenVisible();
+
+      if (page2ScrollFrame !== null) return;
+
+      page2ScrollFrame = window.requestAnimationFrame(() => {
+        page2ScrollFrame = null;
+        startPage2WhenVisible();
+      });
     }
 
     function startPage2WhenVisible() {
@@ -602,7 +609,6 @@
       const triggerLine = window.innerHeight * 0.82;
 
       if (rect.top <= triggerLine && rect.bottom > 0) {
-        void page2.offsetWidth;
         page2.classList.add('play');
         window.removeEventListener('scroll', handlePage2Scroll);
         window.removeEventListener('resize', startPage2WhenVisible);
