@@ -31,10 +31,21 @@
 
     body {
       width: 100%;
-      min-height: 100%;
+      height: 100%;
       background-color: #ffffff;
+      overflow: hidden;
+      position: fixed;
+      inset: 0;
+    }
+
+    .scroll-root {
+      width: 100%;
+      height: 100%;
       overflow-x: clip;
-      overscroll-behavior-y: none;
+      overflow-y: auto;
+      overscroll-behavior: none;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -415,6 +426,7 @@
     </svg>
   </button>
 
+  <main class="scroll-root" id="scrollRoot">
   <section class="card-container page1">
     <div class="card-inner">
       <img src="background.png" class="layer background">
@@ -457,6 +469,7 @@
       <img src="rabbit12.png" class="layer rabbit r12">
     </div>
   </section>
+  </main>
 
   <div class="modal-overlay" id="mapModal">
     <div class="modal-content">
@@ -608,13 +621,14 @@
     window.addEventListener('click', systemTouchFirst);
     window.addEventListener('touchstart', systemTouchFirst);
 
+    const scrollRoot = document.getElementById('scrollRoot');
     const page2 = document.getElementById('page2');
     let page2HasUserScrolled = false;
     let page2ScrollFrame = null;
 
     function handlePage2Scroll() {
       const requiredScroll = Math.min(80, window.innerHeight * 0.08);
-      if (window.scrollY >= requiredScroll) {
+      if (scrollRoot && scrollRoot.scrollTop >= requiredScroll) {
         page2HasUserScrolled = true;
       }
 
@@ -634,12 +648,39 @@
 
       if (rect.top <= triggerLine && rect.bottom > 0) {
         page2.classList.add('play');
-        window.removeEventListener('scroll', handlePage2Scroll);
+        scrollRoot.removeEventListener('scroll', handlePage2Scroll);
         window.removeEventListener('resize', startPage2WhenVisible);
       }
     }
 
-    window.addEventListener('scroll', handlePage2Scroll, { passive: true });
+    if (scrollRoot) {
+      scrollRoot.scrollTop = 0;
+      scrollRoot.addEventListener('scroll', handlePage2Scroll, { passive: true });
+
+      let previousTouchY = 0;
+
+      scrollRoot.addEventListener('touchstart', (event) => {
+        if (event.touches.length === 1) {
+          previousTouchY = event.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      scrollRoot.addEventListener('touchmove', (event) => {
+        if (event.touches.length !== 1) return;
+
+        const currentTouchY = event.touches[0].clientY;
+        const fingerDelta = currentTouchY - previousTouchY;
+        const maximumScroll = scrollRoot.scrollHeight - scrollRoot.clientHeight;
+        const movingPastTop = scrollRoot.scrollTop <= 0 && fingerDelta > 0;
+        const movingPastBottom = scrollRoot.scrollTop >= maximumScroll - 1 && fingerDelta < 0;
+
+        if (movingPastTop || movingPastBottom) {
+          event.preventDefault();
+        }
+
+        previousTouchY = currentTouchY;
+      }, { passive: false });
+    }
     window.addEventListener('resize', startPage2WhenVisible);
     window.addEventListener('load', startPage2WhenVisible);
     document.addEventListener('DOMContentLoaded', startPage2WhenVisible);
@@ -762,7 +803,7 @@
       openExternalMap.addEventListener('click', (e) => {
         e.stopPropagation();
         runAfterPress(openExternalMap, () => {
-          window.location.href = 'https://www.google.com/maps/search/?api=1&query=37.566484%2C126.992205&hl=ja';
+          window.location.href = 'https://www.google.com/maps?cid=11355692791430514673&hl=ja';
         });
       });
     }
