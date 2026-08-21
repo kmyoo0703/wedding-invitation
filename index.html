@@ -16,19 +16,22 @@
       box-sizing: border-box;
     }
 
-    html, body {
+    html {
       width: 100%;
       min-height: 100%;
       background-color: #ffffff;
-      overflow-x: hidden;
-      overflow-y: auto;
+      overflow-x: clip;
       scroll-behavior: smooth;
       overflow-anchor: none;
       overscroll-behavior-y: none;
-      -webkit-overflow-scrolling: touch;
     }
 
     body {
+      width: 100%;
+      min-height: 100%;
+      background-color: #ffffff;
+      overflow-x: clip;
+      overscroll-behavior-y: none;
       display: flex;
       flex-direction: column;
       align-items: center;
