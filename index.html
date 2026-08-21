@@ -21,7 +21,6 @@
       min-height: 100%;
       background-color: #ffffff;
       overflow-x: clip;
-      scroll-behavior: smooth;
       overflow-anchor: none;
       overscroll-behavior-y: none;
     }
@@ -546,7 +545,23 @@
       });
     }
 
-    window.addEventListener('resize', fitCardInner);
+    let lastLayoutWidth = document.documentElement.clientWidth;
+    let fitResizeFrame = null;
+
+    function fitCardInnerOnWidthChange() {
+      const nextLayoutWidth = document.documentElement.clientWidth;
+      if (nextLayoutWidth === lastLayoutWidth) return;
+
+      lastLayoutWidth = nextLayoutWidth;
+      if (fitResizeFrame !== null) return;
+
+      fitResizeFrame = window.requestAnimationFrame(() => {
+        fitResizeFrame = null;
+        fitCardInner();
+      });
+    }
+
+    window.addEventListener('resize', fitCardInnerOnWidthChange, { passive: true });
     window.addEventListener('load', fitCardInner);
     document.addEventListener('DOMContentLoaded', fitCardInner);
 
