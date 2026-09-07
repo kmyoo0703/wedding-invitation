@@ -446,7 +446,7 @@
       <img src="date2.png" class="layer date2">
       <div class="icon-motion-wrapper icon2-1-motion">
         <img src="icon2-1.png" class="icon2-1-overlay">
-        <button class="date2-map-click-area" id="openDate2Map" type="button" aria-label="첫 번째 지도 열기"></button>
+        <a class="date2-map-click-area" id="openDate2Map" href="https://www.google.com/maps/place/샷토+커피/@37.6630117,126.9493824,17z/data=!3m1!4b1!4m6!3m5!1s0x357c97da1ecab107:0x74f3e7d0994049cf!8m2!3d37.6630117!4d126.9493824!16s%2Fg%2F11kr72y2xn?hl=ja&amp;entry=ttu&amp;g_ep=EgoyMDI2MDgxMi4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" aria-label="샷토커피 Google 지도 상세정보 새 탭으로 열기"></a>
       </div>
       <img src="greeting.png" class="layer greeting">
       <img src="bus2.png" class="layer bus-layer">
@@ -484,7 +484,7 @@
         <img src="date3.png" class="layer date3">
         <div class="icon-motion-wrapper icon3-motion">
           <img src="icon3.png" class="icon3-overlay" alt="">
-          <button class="map-click-area" id="openExternalMap" type="button" aria-label="외부 지도 열기"></button>
+          <a class="map-click-area" id="openExternalMap" href="https://www.google.com/maps?cid=11355692791430514673&amp;hl=ja" target="_blank" rel="noopener noreferrer" aria-label="을지로3가 지도 새 탭으로 열기"></a>
         </div>
       </div>
     </div>
@@ -744,15 +744,6 @@
       }, 160);
     }
 
-    if (openDate2Map) {
-      openDate2Map.addEventListener('click', (e) => {
-        e.stopPropagation();
-        runAfterPress(openDate2Map, () => {
-          window.location.href = 'https://www.google.com/maps/place/샷토+커피/@37.6630117,126.9493824,17z/data=!3m1!4b1!4m6!3m5!1s0x357c97da1ecab107:0x74f3e7d0994049cf!8m2!3d37.6630117!4d126.9493824!16s%2Fg%2F11kr72y2xn?hl=ja&entry=ttu&g_ep=EgoyMDI2MDgxMi4wIKXMDSoASAFQAw%3D%3D';
-        });
-      });
-    }
-
     const openModalIcon = document.getElementById('openModalIcon');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const mapModal = document.getElementById('mapModal');
@@ -798,15 +789,6 @@
     mapModal.addEventListener('click', (e) => {
       e.target === mapModal && closeModal();
     });
-
-    if (openExternalMap) {
-      openExternalMap.addEventListener('click', (e) => {
-        e.stopPropagation();
-        runAfterPress(openExternalMap, () => {
-          window.location.href = 'https://www.google.com/maps?cid=11355692791430514673&hl=ja';
-        });
-      });
-    }
 
     // 모바일과 컴퓨터 모두 동일한 포인터 누름/해제 모션 실행
     [
