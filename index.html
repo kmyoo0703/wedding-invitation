@@ -751,8 +751,8 @@ body{
 
   transition:
     opacity
-    1.3s
-    ease-in-out;
+    1.6s
+    cubic-bezier(.22,.61,.36,1);
 }
 
 .page4-modal.active
@@ -789,12 +789,9 @@ body{
 
 .page4-modal.active
 .background4{
-  animation:
-    fadeIn
-    1.3s
-    ease-in-out
-    0s
-    both;
+  opacity:1;
+  visibility:visible;
+  animation:none;
 }
 
 .page4-modal.active
@@ -1287,7 +1284,7 @@ body{
         <a
           class="icon-motion-click"
           id="icon4Hotspot"
-          href="https://www.google.com/maps/place/을지로3가/data=!3m1!4b1!4m6!3m5!1s0x357ca2e14f9b91b7:0x9d97866dc3ae07f1!8m2!3d37.566484!4d126.992205!16s%2Fg%2F11fpfqn9s9!18m1!1e1?entry=ttu&g_ep=EgoyMDI2MDkyMC4wIKXMDSoASAFQAw%3D%3D"
+          href="https://www.google.com/maps/place/Euljiro+3(sam)ga/data=!4m10!1m5!3m4!1s0x357ca2e14f9b91b7:0x9d97866dc3ae07f1!2sEuljiro+3(sam)ga!16s%2Fg%2F11fpfqn9s9!20s8Q98HX8R%2BHVW8R55!3m3!1s0x357ca2e14f9b91b7:0x9d97866dc3ae07f1!16s%2Fg%2F11fpfqn9s9!20s8Q98HX8R%2BHVW8R55?hl=ja&entry=ttu&g_ep=EgoyMDI2MDkyMi4wIKXMDSoASAFQAw%3D%3D"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="을지로3가 Google Maps 새 창으로 열기">
@@ -2454,7 +2451,7 @@ function hidePage4(){
       closeTimer =
         null;
 
-    },1300);
+    },1600);
 
 }
 
