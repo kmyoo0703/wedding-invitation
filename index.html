@@ -843,15 +843,20 @@ body{
   visibility:visible!important;
 }
 
-.page4-modal.active.closing.title4-ready
-.title42{
-  display:block!important;
-  opacity:1!important;
-  visibility:visible!important;
-  animation:none!important;
-
-  transform:
-    translateY(0)!important;
+/* 닫는 순간 현재 보이는 상태를 그대로 멈춘 뒤
+   page4-content 전체만 자연스럽게 페이드아웃 */
+.page4-modal.active.closing
+.rabbit4,
+.page4-modal.active.closing
+.title41,
+.page4-modal.active.closing
+.title42,
+.page4-modal.active.closing
+.message4,
+.page4-modal.active.closing
+.icon4-motion{
+  animation-play-state:paused!important;
+  -webkit-animation-play-state:paused!important;
 }
 
 .page4-modal.active
